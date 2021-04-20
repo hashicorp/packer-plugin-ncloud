@@ -1,4 +1,4 @@
-NAME=scaffolding
+NAME=ncloud
 BINARY=packer-plugin-${NAME}
 
 COUNT?=1
