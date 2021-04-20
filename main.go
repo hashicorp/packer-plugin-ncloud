@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"packer-plugin-scaffolding/builder/ncloud"
 
+	"github.com/hashicorp/packer-plugin-ncloud/builder/ncloud"
 	"github.com/hashicorp/packer-plugin-sdk/plugin"
 	"github.com/hashicorp/packer-plugin-sdk/version"
 )
