@@ -1,4 +1,4 @@
-# Scaffolding Plugins
+# NAVER Cloud Plugins
 
 <!--
   Include a short overview about the plugin.
@@ -25,9 +25,9 @@ Then, run [`packer init`](https://www.packer.io/docs/commands/init).
 ```hcl
 packer {
   required_plugins {
-    name = {
+    ncloud = {
       version = ">= 0.0.1"
-      source  = "github.com/hashicorp/name"
+      source  = "github.com/hashicorp/ncloud"
     }
   }
 }
@@ -35,7 +35,7 @@ packer {
 
 #### Manual installation
 
-You can find pre-built binary releases of the plugin [here](https://github.com/hashicorp/packer-plugin-name/releases).
+You can find pre-built binary releases of the plugin [here](https://github.com/hashicorp/packer-plugin-ncloud/releases).
 Once you have downloaded the latest archive corresponding to your target OS,
 uncompress it to retrieve the plugin binary file corresponding to your platform.
 To install the plugin, please follow the Packer documentation on
@@ -58,21 +58,5 @@ The Scaffolding plugin is intended as a starting point for creating Packer plugi
 
 ### Builders
 
-- [builder](/docs/builders/builder-name.mdx) - The scaffolding builder is used to create endless Packer
-  plugins using a consistent plugin structure.
-
-### Provisioners
-
-- [provisioner](/docs/provisioners/provisioner-name.mdx) - The scaffolding provisioner is used to provisioner
-  Packer builds.
-
-### Post-processors
-
-- [post-processor](/docs/post-processors/postprocessor-name.mdx) - The scaffolding post-processor is used to
-  export scaffolding builds.
-
-### Data Sources
-
-- [data source](/docs/datasources/datasource-name.mdx) - The scaffolding data source is used to
-  export scaffolding data.
-
+- [ncloud](builders/ncloud.mdx) - The `ncloud` builder allows you to create server images using the
+  [NAVER Cloud Platform](https://www.ncloud.com/).
