@@ -1,4 +1,5 @@
 ## 1.0.0 (Upcoming)
+
 * Update packer-plugin-sdk to v0.2.3. [GH-56]
 
 ## 0.0.1 (March 30, 2021)
