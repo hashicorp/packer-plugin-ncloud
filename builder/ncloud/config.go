@@ -21,6 +21,7 @@ import (
 )
 
 // Config is structure to use packer builder plugin for Naver Cloud Platform
+// nolint: unused
 type Config struct {
 	common.PackerConfig `mapstructure:",squash"`
 
@@ -128,7 +129,7 @@ func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 	if c.BlockStorageSize != 0 {
 		if c.BlockStorageSize < 10 || c.BlockStorageSize > 2000 {
 			errs = packersdk.MultiErrorAppend(errs, errors.New("the size of `block_storage_size` is at least 10 GB and up to 2000GB"))
-		} else if int(c.BlockStorageSize/10)*10 != c.BlockStorageSize {
+		} else if c.BlockStorageSize%10 != 0 {
 			return nil, errors.New("BlockStorageSize must be a multiple of 10 GB")
 		}
 	}

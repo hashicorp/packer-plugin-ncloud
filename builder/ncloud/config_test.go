@@ -7,35 +7,35 @@ import (
 
 func testConfig() map[string]interface{} {
 	return map[string]interface{}{
-		"access_key":                            "access_key",
-		"secret_key":                            "secret_key",
-		"server_image_product_code":             "SPSW0WINNT000016",
-		"server_product_code":                   "SPSVRSSD00000011",
-		"server_image_name":                     "packer-test {{timestamp}}",
-		"server_image_description":              "server description",
-		"block_storage_size":                    100,
-		"user_data":                             "#!/bin/sh\nyum install -y httpd\ntouch /var/www/html/index.html\nchkconfig --level 2345 httpd on",
-		"region":                                "Korea",
-		"access_control_group_configuration_no": "33",
-		"communicator":                          "ssh",
-		"ssh_username":                          "root",
+		"access_key":                "access_key",
+		"secret_key":                "secret_key",
+		"server_image_product_code": "SPSW0WINNT000016",
+		"server_product_code":       "SPSVRSSD00000011",
+		"server_image_name":         "packer-test {{timestamp}}",
+		"server_image_description":  "server description",
+		"block_storage_size":        100,
+		"user_data":                 "#!/bin/sh\nyum install -y httpd\ntouch /var/www/html/index.html\nchkconfig --level 2345 httpd on",
+		"region":                    "Korea",
+		"access_control_group_no":   "33",
+		"communicator":              "ssh",
+		"ssh_username":              "root",
 	}
 }
 
 func testConfigForMemberServerImage() map[string]interface{} {
 	return map[string]interface{}{
-		"access_key":                            "access_key",
-		"secret_key":                            "secret_key",
-		"server_product_code":                   "SPSVRSSD00000011",
-		"member_server_image_no":                "2440",
-		"server_image_name":                     "packer-test {{timestamp}}",
-		"server_image_description":              "server description",
-		"block_storage_size":                    100,
-		"user_data":                             "#!/bin/sh\nyum install -y httpd\ntouch /var/www/html/index.html\nchkconfig --level 2345 httpd on",
-		"region":                                "Korea",
-		"access_control_group_configuration_no": "33",
-		"communicator":                          "ssh",
-		"ssh_username":                          "root",
+		"access_key":               "access_key",
+		"secret_key":               "secret_key",
+		"server_product_code":      "SPSVRSSD00000011",
+		"member_server_image_no":   "2440",
+		"server_image_name":        "packer-test {{timestamp}}",
+		"server_image_description": "server description",
+		"block_storage_size":       100,
+		"user_data":                "#!/bin/sh\nyum install -y httpd\ntouch /var/www/html/index.html\nchkconfig --level 2345 httpd on",
+		"region":                   "Korea",
+		"access_control_group_no":  "33",
+		"communicator":             "ssh",
+		"ssh_username":             "root",
 	}
 }
 
@@ -43,7 +43,10 @@ func TestConfigWithServerImageProductCode(t *testing.T) {
 	raw := testConfig()
 
 	var c Config
-	c.Prepare(raw)
+	_, err := c.Prepare(raw)
+	if err != nil {
+		t.Errorf("Did not expect errors. Got: %s", err)
+	}
 
 	if c.AccessKey != "access_key" {
 		t.Errorf("Expected 'access_key' to be set to '%s', but got '%s'.", raw["access_key"], c.AccessKey)
@@ -78,7 +81,10 @@ func TestConfigWithMemberServerImageCode(t *testing.T) {
 	raw := testConfigForMemberServerImage()
 
 	var c Config
-	c.Prepare(raw)
+	_, err := c.Prepare(raw)
+	if err != nil {
+		t.Errorf("Did not expect errors. Got: %s", err)
+	}
 
 	if c.AccessKey != "access_key" {
 		t.Errorf("Expected 'access_key' to be set to '%s', but got '%s'.", raw["access_key"], c.AccessKey)
