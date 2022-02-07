@@ -369,6 +369,31 @@ func (s *StepValidateTemplate) validateVpc() error {
 		return nil
 	}
 
+	if s.Config.VpcNo == "" && s.Config.SubnetNo == "" {
+		reqParam := &vpc.GetVpcListRequest{
+			RegionCode: &s.Config.RegionCode,
+		}
+
+		resp, err := s.Conn.vpc.V2Api.GetVpcList(reqParam)
+		if err != nil {
+			return err
+		}
+
+		if resp == nil || *resp.TotalRows == 0 {
+			return fmt.Errorf("cloud not found VPC in %s region", s.Config.RegionCode)
+		}
+
+		for _, vpc := range resp.VpcList {
+			s.Config.VpcNo = *vpc.VpcNo
+			if subnet, err := s.getFirstPublicSubnet(); err == nil {
+				s.Config.SubnetNo = *subnet.SubnetNo
+				return nil
+			}
+		}
+
+		return fmt.Errorf("cloud not found public subnet in entire VPCs [%s]", s.Config.RegionCode)
+	}
+
 	if s.Config.VpcNo != "" {
 		reqParam := &vpc.GetVpcDetailRequest{
 			RegionCode: &s.Config.RegionCode,
@@ -405,26 +430,34 @@ func (s *StepValidateTemplate) validateVpc() error {
 	}
 
 	if s.Config.VpcNo != "" && s.Config.SubnetNo == "" {
-		reqParam := &vpc.GetSubnetListRequest{
-			RegionCode:     &s.Config.RegionCode,
-			VpcNo:          &s.Config.VpcNo,
-			SubnetTypeCode: ncloud.String("PUBLIC"),
-		}
-
-		resp, err := s.Conn.vpc.V2Api.GetSubnetList(reqParam)
-		if err != nil {
+		if subnet, err := s.getFirstPublicSubnet(); err != nil {
 			return err
-		}
-
-		if resp != nil && *resp.TotalRows > 0 {
-			s.Config.SubnetNo = *resp.SubnetList[0].SubnetNo
-			s.Say("Set `subnet_no` is " + s.Config.SubnetNo)
 		} else {
-			return fmt.Errorf("cloud not found public subnet in `vpc_no` [%s]", s.Config.VpcNo)
+			s.Config.SubnetNo = *subnet.SubnetNo
+			s.Say("Set `subnet_no` is " + s.Config.SubnetNo)
 		}
 	}
 
 	return nil
+}
+
+func (s *StepValidateTemplate) getFirstPublicSubnet() (*vpc.Subnet, error) {
+	reqParam := &vpc.GetSubnetListRequest{
+		RegionCode:     &s.Config.RegionCode,
+		VpcNo:          &s.Config.VpcNo,
+		SubnetTypeCode: ncloud.String("PUBLIC"),
+	}
+
+	resp, err := s.Conn.vpc.V2Api.GetSubnetList(reqParam)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp != nil && *resp.TotalRows > 0 {
+		return resp.SubnetList[0], nil
+	}
+
+	return nil, fmt.Errorf("cloud not found public subnet in `vpc_no` [%s]", s.Config.VpcNo)
 }
 
 // Check ImageName / Product Code / Server Image Product Code / Server Product Code...
@@ -449,6 +482,7 @@ func (s *StepValidateTemplate) validateTemplate() error {
 		return err
 	}
 
+	s.Say(fmt.Sprintf("vpc: %s, subnet: %s", s.Config.VpcNo, s.Config.SubnetNo))
 	// Validate server_product_code
 	return s.validateServerProductCode()
 }

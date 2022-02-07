@@ -35,10 +35,14 @@ Platform](https://www.ncloud.com/).
 
 - `server_product_code` (string) - Product (spec) code to create.
 
-- `vpc_no` (string) - The ID of the VPC where you want to place the Server Instance. If this field is left blank, Packer will try to get the VPC ID from the `subnet_no`.
-  (You are required to least one between two parameters if u want using VPC environment: `vpc_no` or `subnet_no`)
+- `support_vpc` (bool) - Whether to use VPC without specific vpc or subnet. Packer will try find public subnet in entire vpc if you set this value `true`. 
+  (You are required to least one three parameters if u want using VPC environment: `support_vpc` or `vpc_no` or `subnet_no`)
 
-- `subnet_no` (string) - The ID of the Subnet where you want to place the Server Instance. If this field is left blank, Packer will try to get the Public Subnet ID from the `vpc_no`.
+- `vpc_no` (string) - The ID of the VPC where you want to place the Server Instance. If this field is left blank, Packer will try to get the VPC ID from the `subnet_no` or exists public subnet.
+  (You are required to least one three parameters if u want using VPC environment: `support_vpc` or `vpc_no` or `subnet_no`)
+
+- `subnet_no` (string) - The ID of the Subnet where you want to place the Server Instance. This field is required if you are using an specific subnets.
+  (You are required to least one three parameters if u want using VPC environment: `support_vpc` or `vpc_no` or `subnet_no`)
 
 - `member_server_image_no` (string) - Previous image code. If there is an
   image previously created, it can be used to create a new image.
@@ -100,8 +104,9 @@ source "ncloud" "example-windows" {
   server_image_description              = "server image description"
   user_data                             = "CreateObject(\"WScript.Shell\").run(\"cmd.exe /c powershell Set-ExecutionPolicy RemoteSigned & winrm quickconfig -q & sc config WinRM start= auto & winrm set winrm/config/service/auth @{Basic=\"\"true\"\"} & winrm set winrm/config/service @{AllowUnencrypted=\"\"true\"\"} & winrm get winrm/config/service\")"
   region                                = "Korea"
-  vpc_no                                = "{{YOUR_VPC_ID}}" // Remove this if you use CLASSIC environment.
-  subnet_no                             = "{{YOUR_SUBNET_ID}}" // Remove this if you use CLASSIC environment.
+  support_vpc                           = true // Remove this if you use CLASSIC environment.
+  # vpc_no                                = "{{YOUR_VPC_ID}}" // Remove this if you use CLASSIC environment.
+  # subnet_no                             = "{{YOUR_SUBNET_ID}}" // Remove this if you use CLASSIC environment.
   communicator                          = "winrm"
   winrm_username                        = "Administrator"
   # access_control_group_no             = "{{YOUR_ACG_ID}}" // Specific ACG ID allowed port (5985) if you use CLASSIC environment.
@@ -184,8 +189,9 @@ source "ncloud" "example-linux" {
   server_image_name         = "packer-${local.timestamp}"
   server_image_description  = "server image description"
   region                    = "Korea"
-  vpc_no                    = "{{YOUR_VPC_ID}}" // Remove this if you use CLASSIC environment.
-  subnet_no                 = "{{YOUR_SUBNET_ID}}" // Remove this if you use CLASSIC environment.
+  support_vpc               = true // Remove this if you use CLASSIC environment.
+  # vpc_no                    = "{{YOUR_VPC_ID}}" // Remove this if you use CLASSIC environment.
+  # subnet_no                 = "{{YOUR_SUBNET_ID}}" // Remove this if you use CLASSIC environment.
   communicator              = "ssh"
   ssh_username              = "root"
 }
