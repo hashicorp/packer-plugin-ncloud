@@ -457,7 +457,7 @@ func (s *StepValidateTemplate) getFirstPublicSubnet() (*vpc.Subnet, error) {
 		return resp.SubnetList[0], nil
 	}
 
-	return nil, fmt.Errorf("cloud not found public subnet in `vpc_no` [%s]", s.Config.VpcNo)
+	return nil, fmt.Errorf("could not found public subnet in `vpc_no` [%s]", s.Config.VpcNo)
 }
 
 // Check ImageName / Product Code / Server Image Product Code / Server Product Code...
