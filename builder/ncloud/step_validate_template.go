@@ -380,7 +380,7 @@ func (s *StepValidateTemplate) validateVpc() error {
 		}
 
 		if resp == nil || *resp.TotalRows == 0 {
-			return fmt.Errorf("cloud not found VPC in %s region", s.Config.RegionCode)
+			return fmt.Errorf("could not found VPC in %s region", s.Config.RegionCode)
 		}
 
 		for _, vpc := range resp.VpcList {
@@ -391,7 +391,7 @@ func (s *StepValidateTemplate) validateVpc() error {
 			}
 		}
 
-		return fmt.Errorf("cloud not found public subnet in entire VPCs [%s]", s.Config.RegionCode)
+		return fmt.Errorf("could not found public subnet in entire VPCs [%s]", s.Config.RegionCode)
 	}
 
 	if s.Config.VpcNo != "" {
@@ -406,7 +406,7 @@ func (s *StepValidateTemplate) validateVpc() error {
 		}
 
 		if resp == nil || *resp.TotalRows == 0 {
-			return fmt.Errorf("cloud not found VPC `vpc_no` [%s]", s.Config.VpcNo)
+			return fmt.Errorf("could not found VPC `vpc_no` [%s]", s.Config.VpcNo)
 		}
 	}
 
@@ -425,7 +425,7 @@ func (s *StepValidateTemplate) validateVpc() error {
 			s.Config.VpcNo = *resp.SubnetList[0].VpcNo
 			s.Say("Set `vpc_no` is " + s.Config.VpcNo)
 		} else {
-			return fmt.Errorf("cloud not found public subnet in `subnet_no` [%s]", s.Config.SubnetNo)
+			return fmt.Errorf("could not found public subnet in `subnet_no` [%s]", s.Config.SubnetNo)
 		}
 	}
 
