@@ -1,6 +1,6 @@
 module github.com/hashicorp/packer-plugin-ncloud
 
-go 1.17
+go 1.18
 
 require (
 	github.com/NaverCloudPlatform/ncloud-sdk-go-v2 v1.1.7
