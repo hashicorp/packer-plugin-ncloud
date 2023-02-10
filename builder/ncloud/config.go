@@ -70,6 +70,9 @@ type Config struct {
 	// The ID of the VPC where you want to place the Server Instance. If this field is left blank, Packer will try to get the VPC ID from the `subnet_no`.
 	// (You are required to least one between two parameters if u want using VPC environment: `vpc_no` or `subnet_no`)
 	VpcNo string `mapstructure:"vpc_no" required:"false"`
+	// The ncloud site (Default: public)
+	// available site: public(`www.ncloud.com`), gov(`www.gov-ncloud.com`) and fin(`www.fin-ncloud.com`)
+	Site string `mapstructure:"site" required:"false"`
 
 	Comm communicator.Config `mapstructure:",squash"`
 	ctx  *interpolate.Context

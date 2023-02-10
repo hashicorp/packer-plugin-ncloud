@@ -2,6 +2,7 @@ package ncloud
 
 import (
 	"context"
+	"os"
 
 	"github.com/NaverCloudPlatform/ncloud-sdk-go-v2/services/server"
 	"github.com/hashicorp/hcl/v2/hcldec"
@@ -36,6 +37,13 @@ func (b *Builder) Run(ctx context.Context, ui packersdk.Ui, hook packersdk.Hook)
 	config := Config{
 		AccessKey: b.config.AccessKey,
 		SecretKey: b.config.SecretKey,
+	}
+
+	switch b.config.Site {
+	case "gov":
+		os.Setenv("NCLOUD_API_GW", "https://ncloud.apigw.gov-ntruss.com")
+	case "fin":
+		os.Setenv("NCLOUD_API_GW", "https://fin-ncloud.apigw.fin-ntruss.com")
 	}
 
 	conn, err := config.Client()
