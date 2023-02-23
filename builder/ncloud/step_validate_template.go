@@ -16,7 +16,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-//StepValidateTemplate : struct for Validation a template
+// StepValidateTemplate : struct for Validation a template
 type StepValidateTemplate struct {
 	Conn                      *NcloudAPIClient
 	Validate                  func() error
@@ -97,7 +97,7 @@ func (s *StepValidateTemplate) getZoneNo() error {
 
 // getZoneCode : get zoneCode
 func (s *StepValidateTemplate) getZoneCode() error {
-	if s.Config.Region == "" {
+	if s.Config.Region == "" && s.Config.RegionCode == "" {
 		return nil
 	}
 
@@ -110,6 +110,12 @@ func (s *StepValidateTemplate) getZoneCode() error {
 		if strings.EqualFold(*region.RegionName, s.Config.Region) {
 			s.regionCode = *region.RegionCode
 			s.Config.RegionCode = *region.RegionCode
+			break
+		}
+		if strings.EqualFold(*region.RegionCode, s.Config.RegionCode) {
+			s.regionCode = *region.RegionCode
+			s.Config.RegionCode = *region.RegionCode
+			break
 		}
 	}
 

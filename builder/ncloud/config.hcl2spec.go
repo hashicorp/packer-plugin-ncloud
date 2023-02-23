@@ -35,6 +35,7 @@ type FlatConfig struct {
 	SupportVPC                        *bool             `mapstructure:"support_vpc" required:"false" cty:"support_vpc" hcl:"support_vpc"`
 	SubnetNo                          *string           `mapstructure:"subnet_no" required:"false" cty:"subnet_no" hcl:"subnet_no"`
 	VpcNo                             *string           `mapstructure:"vpc_no" required:"false" cty:"vpc_no" hcl:"vpc_no"`
+	Site                              *string           `mapstructure:"site" required:"false" cty:"site" hcl:"site"`
 	Type                              *string           `mapstructure:"communicator" cty:"communicator" hcl:"communicator"`
 	PauseBeforeConnect                *string           `mapstructure:"pause_before_connecting" cty:"pause_before_connecting" hcl:"pause_before_connecting"`
 	SSHHost                           *string           `mapstructure:"ssh_host" cty:"ssh_host" hcl:"ssh_host"`
@@ -123,6 +124,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"support_vpc":                           &hcldec.AttrSpec{Name: "support_vpc", Type: cty.Bool, Required: false},
 		"subnet_no":                             &hcldec.AttrSpec{Name: "subnet_no", Type: cty.String, Required: false},
 		"vpc_no":                                &hcldec.AttrSpec{Name: "vpc_no", Type: cty.String, Required: false},
+		"site":                                  &hcldec.AttrSpec{Name: "site", Type: cty.String, Required: false},
 		"communicator":                          &hcldec.AttrSpec{Name: "communicator", Type: cty.String, Required: false},
 		"pause_before_connecting":               &hcldec.AttrSpec{Name: "pause_before_connecting", Type: cty.String, Required: false},
 		"ssh_host":                              &hcldec.AttrSpec{Name: "ssh_host", Type: cty.String, Required: false},
