@@ -52,11 +52,10 @@ type Config struct {
 	// You can add block storage ranging from 10
 	// GB to 2000 GB, in increments of 10 GB.
 	BlockStorageSize int `mapstructure:"block_storage_size" required:"false"`
-	// Name of the region where you want to create an image.
-	// (default: Korea)
+	// The name of the region where you want to create an image. To be deprecated
 	Region string `mapstructure:"region" required:"false"`
-	// Code of the region
-	// (default: KR) (fin default: FKR)
+	// The code of the region where you want to create an image. Such as KR.
+	// (pub or gov default: KR) (fin default: FKR)
 	RegionCode string `mapstructure:"region_code" required:"false"`
 	// Deprecated
 	AccessControlGroupConfigurationNo string `mapstructure:"access_control_group_configuration_no" required:"false"`
@@ -161,6 +160,14 @@ func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 
 	if c.Comm.Type == "winrm" && c.AccessControlGroupNo == "" && !c.SupportVPC {
 		errs = packersdk.MultiErrorAppend(errs, errors.New("if Communicator is winrm, `access_control_group_no` (allow 5986 port) is required in `CLASSIC` environment"))
+	}
+
+	if c.Region == "" && c.RegionCode == "" {
+		if c.Site == "fin" {
+			c.RegionCode = "FKR"
+		} else {
+			c.RegionCode = "KR"
+		}
 	}
 
 	if errs != nil && len(errs.Errors) > 0 {

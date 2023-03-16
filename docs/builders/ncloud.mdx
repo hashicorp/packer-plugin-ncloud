@@ -69,15 +69,9 @@ Platform](https://www.ncloud.com/).
 - `user_data_file` (string) - Path to a file that will be used for the user
   data when launching the instance.
 
-- `region` (string) - Name of the region where you want to create an image.
-  (default: Korea)
-  - values: Korea / US-West / HongKong / Singapore / Japan / Germany
-  (`region` or `region code` must be set)
+- `region` (string) - The name of the region where you want to create an image. Such as `Korea`. To be deprecated
 
-- `region_code` (string) - Code of the region where you want to create an image.
-  (default: KR)
-  - values: KR / US / HK / SG / JP / GE
-  (`region` or `region code` must be set)
+- `region_code` (string) - The code of the region where you want to create an image. Such as `KR` (default: KR)
 
 - `site` (string) - The ncloud site. Available sites are
   public(`www.ncloud.com`), gov(`www.gov-ncloud.com`) and fin(`www.fin-ncloud.com`)
@@ -114,13 +108,14 @@ source "ncloud" "example-windows" {
   server_image_name                     = "packer-${local.timestamp}"
   server_image_description              = "server image description"
   user_data                             = "CreateObject(\"WScript.Shell\").run(\"cmd.exe /c powershell Set-ExecutionPolicy RemoteSigned & winrm quickconfig -q & sc config WinRM start= auto & winrm set winrm/config/service/auth @{Basic=\"\"true\"\"} & winrm set winrm/config/service @{AllowUnencrypted=\"\"true\"\"} & winrm get winrm/config/service\")"
-  region                                = "Korea"
+  region_code                           = "KR"
   support_vpc                           = true // Remove this if you use CLASSIC environment.
   # vpc_no                                = "{{YOUR_VPC_ID}}" // Remove this if you use CLASSIC environment.
   # subnet_no                             = "{{YOUR_SUBNET_ID}}" // Remove this if you use CLASSIC environment.
   communicator                          = "winrm"
   winrm_username                        = "Administrator"
   # access_control_group_no             = "{{YOUR_ACG_ID}}" // Specific ACG ID allowed port (5985) if you use CLASSIC environment.
+  # site                                = "fin" or "gov" // if you use FINANCE or GOVERNMENT environment
 }
 
 build {
@@ -152,7 +147,7 @@ build {
       "server_image_name": "packer-test {{timestamp}}",
       "server_image_description": "server description",
       "user_data": "CreateObject(\"WScript.Shell\").run(\"cmd.exe /c powershell Set-ExecutionPolicy RemoteSigned & winrm quickconfig -q & sc config WinRM start= auto & winrm set winrm/config/service/auth @{Basic=\"\"true\"\"} & winrm set winrm/config/service @{AllowUnencrypted=\"\"true\"\"} & winrm get winrm/config/service\")",
-      "region": "Korea",
+      "region_code": "KR",
       "communicator": "winrm",
       "winrm_username": "Administrator"
     }
@@ -199,12 +194,13 @@ source "ncloud" "example-linux" {
   # server_image_product_code = "SPSW0LINUX000044" // for CLASSIC environment.
   server_image_name         = "packer-${local.timestamp}"
   server_image_description  = "server image description"
-  region                    = "Korea"
+  region_code               = "KR"
   support_vpc               = true // Remove this if you use CLASSIC environment.
   # vpc_no                    = "{{YOUR_VPC_ID}}" // Remove this if you use CLASSIC environment.
   # subnet_no                 = "{{YOUR_SUBNET_ID}}" // Remove this if you use CLASSIC environment.
   communicator              = "ssh"
   ssh_username              = "root"
+  # site                    = "fin" or "gov" // if you use FINANCE or GOVERNMENT environment
 }
 
 build {
@@ -235,7 +231,7 @@ build {
       "server_image_product_code": "SPSW0LINUX000044",
       "server_image_name": "packer-test {{timestamp}}",
       "server_image_description": "server description",
-      "region": "Korea",
+      "region_code": "KR",
       "communicator": "ssh",
       "ssh_username": "root"
     }
