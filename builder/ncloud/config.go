@@ -25,13 +25,24 @@ import (
 type Config struct {
 	common.PackerConfig `mapstructure:",squash"`
 
-	AccessKey string `mapstructure:"access_key"`
-	SecretKey string `mapstructure:"secret_key"`
+	// User's access key. Go to [\[Account Management &gt; Authentication Key\]](https://www.ncloud.com/mypage/manage/authkey) to create and view your authentication key.
+	AccessKey string `mapstructure:"access_key" required:"true"`
+	// User's secret key paired with the access key. Go to [\[Account Management &gt; Authentication Key\]](https://www.ncloud.com/mypage/manage/authkey) to create and view your authentication key.
+	SecretKey string `mapstructure:"secret_key" required:"true"`
 	// Product code of an image to create.
 	// (member_server_image_no is required if not specified)
 	ServerImageProductCode string `mapstructure:"server_image_product_code" required:"true"`
 	// Product (spec) code to create.
-	ServerProductCode string `mapstructure:"server_product_code" required:"true"`
+	ServerProductCode string `mapstructure:"server_product_code" required:"false"`
+	// Whether to use VPC without specific vpc or subnet. Packer will try find public subnet in entire vpc if you set this value `true`.
+	// (You are required to least one three parameters if u want using VPC environment: `support_vpc` or `vpc_no` or `subnet_no`)
+	SupportVPC bool `mapstructure:"support_vpc" required:"false"`
+	// The ID of the VPC where you want to place the Server Instance. If this field is left blank, Packer will try to get the VPC ID from the `subnet_no` or exists public subnet.
+	// (You are required to least one three parameters if u want using VPC environment: `support_vpc` or `vpc_no` or `subnet_no`)
+	VpcNo string `mapstructure:"vpc_no" required:"false"`
+	// The ID of the Subnet where you want to place the Server Instance. This field is required if you are using an specific subnets.
+	// (You are required to least one three parameters if u want using VPC environment: `support_vpc` or `vpc_no` or `subnet_no`)
+	SubnetNo string `mapstructure:"subnet_no" required:"false"`
 	// Previous image code. If there is an
 	// image previously created, it can be used to create a new image.
 	// (server_image_product_code is required if not specified)
@@ -40,6 +51,14 @@ type Config struct {
 	ServerImageName string `mapstructure:"server_image_name" required:"false"`
 	// Description of an image to create.
 	ServerImageDescription string `mapstructure:"server_image_description" required:"false"`
+	// You can add block storage ranging from 10GB to 2000 GB, in increments of 10 GB.
+	BlockStorageSize int `mapstructure:"block_storage_size" required:"false"`
+	// This is used to allow
+	// winrm access when you create a Windows server. An ACG that specifies an
+	// access source (0.0.0.0/0) and allowed port (5985) must be created in
+	// advance if you use CLASSIC env. If this field is left blank,
+	// Packer will create temporary ACG for automatically in VPC environment.
+	AccessControlGroupNo string `mapstructure:"access_control_group_no" required:"false"`
 	// User data to apply when launching the instance. Note
 	// that you need to be careful about escaping characters due to the templates
 	// being JSON. It is often more convenient to use user_data_file, instead.
@@ -49,32 +68,17 @@ type Config struct {
 	// Path to a file that will be used for the user
 	// data when launching the instance.
 	UserDataFile string `mapstructure:"user_data_file" required:"false"`
-	// You can add block storage ranging from 10
-	// GB to 2000 GB, in increments of 10 GB.
-	BlockStorageSize int `mapstructure:"block_storage_size" required:"false"`
-	// Name of the region where you want to create an image.
-	// (default: Korea)
+	// The name of the region where you want to create an image. Such as `Korea`. To be deprecated
 	Region string `mapstructure:"region" required:"false"`
-	// Code of the region
-	// (default: KR) (fin default: FKR)
+	// The code of the region where you want to create an image. Such as KR.
+	// (pub or gov default: KR) (fin default: FKR)
 	RegionCode string `mapstructure:"region_code" required:"false"`
-	// Deprecated
-	AccessControlGroupConfigurationNo string `mapstructure:"access_control_group_configuration_no" required:"false"`
-	// This is used to allow
-	// winrm access when you create a Windows server. An ACG that specifies an
-	// access source (0.0.0.0/0) and allowed port (5985) must be created in
-	// advance if you use CLASSIC env. If this field is left blank,
-	// Packer will create temporary ACG for automatically in VPC environment.
-	AccessControlGroupNo string `mapstructure:"access_control_group_no" required:"false"`
-	SupportVPC           bool   `mapstructure:"support_vpc" required:"false"`
-	// The ID of the Subnet where you want to place the Server Instance. If this field is left blank, Packer will try to get the Public Subnet ID from the `vpc_no`.
-	SubnetNo string `mapstructure:"subnet_no" required:"false"`
-	// The ID of the VPC where you want to place the Server Instance. If this field is left blank, Packer will try to get the VPC ID from the `subnet_no`.
-	// (You are required to least one between two parameters if u want using VPC environment: `vpc_no` or `subnet_no`)
-	VpcNo string `mapstructure:"vpc_no" required:"false"`
-	// The ncloud site (Default: public)
-	// available site: public(`www.ncloud.com`), gov(`www.gov-ncloud.com`) and fin(`www.fin-ncloud.com`)
+	// The ncloud site. Available sites are public(`www.ncloud.com`), gov(`www.gov-ncloud.com`) and fin(`www.fin-ncloud.com`) (default: public)
+	// - values: public / gov / fin
 	Site string `mapstructure:"site" required:"false"`
+
+	// Deprecated
+	AccessControlGroupConfigurationNo string `mapstructure:",skip"`
 
 	Comm communicator.Config `mapstructure:",squash"`
 	ctx  *interpolate.Context
@@ -161,6 +165,14 @@ func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 
 	if c.Comm.Type == "winrm" && c.AccessControlGroupNo == "" && !c.SupportVPC {
 		errs = packersdk.MultiErrorAppend(errs, errors.New("if Communicator is winrm, `access_control_group_no` (allow 5986 port) is required in `CLASSIC` environment"))
+	}
+
+	if c.Region == "" && c.RegionCode == "" {
+		if c.Site == "fin" {
+			c.RegionCode = "FKR"
+		} else {
+			c.RegionCode = "KR"
+		}
 	}
 
 	if errs != nil && len(errs.Errors) > 0 {

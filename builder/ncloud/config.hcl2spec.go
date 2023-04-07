@@ -18,24 +18,24 @@ type FlatConfig struct {
 	PackerOnError                     *string           `mapstructure:"packer_on_error" cty:"packer_on_error" hcl:"packer_on_error"`
 	PackerUserVars                    map[string]string `mapstructure:"packer_user_variables" cty:"packer_user_variables" hcl:"packer_user_variables"`
 	PackerSensitiveVars               []string          `mapstructure:"packer_sensitive_variables" cty:"packer_sensitive_variables" hcl:"packer_sensitive_variables"`
-	AccessKey                         *string           `mapstructure:"access_key" cty:"access_key" hcl:"access_key"`
-	SecretKey                         *string           `mapstructure:"secret_key" cty:"secret_key" hcl:"secret_key"`
+	AccessKey                         *string           `mapstructure:"access_key" required:"true" cty:"access_key" hcl:"access_key"`
+	SecretKey                         *string           `mapstructure:"secret_key" required:"true" cty:"secret_key" hcl:"secret_key"`
 	ServerImageProductCode            *string           `mapstructure:"server_image_product_code" required:"true" cty:"server_image_product_code" hcl:"server_image_product_code"`
-	ServerProductCode                 *string           `mapstructure:"server_product_code" required:"true" cty:"server_product_code" hcl:"server_product_code"`
+	ServerProductCode                 *string           `mapstructure:"server_product_code" required:"false" cty:"server_product_code" hcl:"server_product_code"`
+	SupportVPC                        *bool             `mapstructure:"support_vpc" required:"false" cty:"support_vpc" hcl:"support_vpc"`
+	VpcNo                             *string           `mapstructure:"vpc_no" required:"false" cty:"vpc_no" hcl:"vpc_no"`
+	SubnetNo                          *string           `mapstructure:"subnet_no" required:"false" cty:"subnet_no" hcl:"subnet_no"`
 	MemberServerImageNo               *string           `mapstructure:"member_server_image_no" required:"false" cty:"member_server_image_no" hcl:"member_server_image_no"`
 	ServerImageName                   *string           `mapstructure:"server_image_name" required:"false" cty:"server_image_name" hcl:"server_image_name"`
 	ServerImageDescription            *string           `mapstructure:"server_image_description" required:"false" cty:"server_image_description" hcl:"server_image_description"`
+	BlockStorageSize                  *int              `mapstructure:"block_storage_size" required:"false" cty:"block_storage_size" hcl:"block_storage_size"`
+	AccessControlGroupNo              *string           `mapstructure:"access_control_group_no" required:"false" cty:"access_control_group_no" hcl:"access_control_group_no"`
 	UserData                          *string           `mapstructure:"user_data" required:"false" cty:"user_data" hcl:"user_data"`
 	UserDataFile                      *string           `mapstructure:"user_data_file" required:"false" cty:"user_data_file" hcl:"user_data_file"`
-	BlockStorageSize                  *int              `mapstructure:"block_storage_size" required:"false" cty:"block_storage_size" hcl:"block_storage_size"`
 	Region                            *string           `mapstructure:"region" required:"false" cty:"region" hcl:"region"`
 	RegionCode                        *string           `mapstructure:"region_code" required:"false" cty:"region_code" hcl:"region_code"`
-	AccessControlGroupConfigurationNo *string           `mapstructure:"access_control_group_configuration_no" required:"false" cty:"access_control_group_configuration_no" hcl:"access_control_group_configuration_no"`
-	AccessControlGroupNo              *string           `mapstructure:"access_control_group_no" required:"false" cty:"access_control_group_no" hcl:"access_control_group_no"`
-	SupportVPC                        *bool             `mapstructure:"support_vpc" required:"false" cty:"support_vpc" hcl:"support_vpc"`
-	SubnetNo                          *string           `mapstructure:"subnet_no" required:"false" cty:"subnet_no" hcl:"subnet_no"`
-	VpcNo                             *string           `mapstructure:"vpc_no" required:"false" cty:"vpc_no" hcl:"vpc_no"`
 	Site                              *string           `mapstructure:"site" required:"false" cty:"site" hcl:"site"`
+	AccessControlGroupConfigurationNo *string           `mapstructure:",skip" cty:"access_control_group_configuration_no" hcl:"access_control_group_configuration_no"`
 	Type                              *string           `mapstructure:"communicator" cty:"communicator" hcl:"communicator"`
 	PauseBeforeConnect                *string           `mapstructure:"pause_before_connecting" cty:"pause_before_connecting" hcl:"pause_before_connecting"`
 	SSHHost                           *string           `mapstructure:"ssh_host" cty:"ssh_host" hcl:"ssh_host"`
@@ -111,20 +111,20 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"secret_key":                            &hcldec.AttrSpec{Name: "secret_key", Type: cty.String, Required: false},
 		"server_image_product_code":             &hcldec.AttrSpec{Name: "server_image_product_code", Type: cty.String, Required: false},
 		"server_product_code":                   &hcldec.AttrSpec{Name: "server_product_code", Type: cty.String, Required: false},
+		"support_vpc":                           &hcldec.AttrSpec{Name: "support_vpc", Type: cty.Bool, Required: false},
+		"vpc_no":                                &hcldec.AttrSpec{Name: "vpc_no", Type: cty.String, Required: false},
+		"subnet_no":                             &hcldec.AttrSpec{Name: "subnet_no", Type: cty.String, Required: false},
 		"member_server_image_no":                &hcldec.AttrSpec{Name: "member_server_image_no", Type: cty.String, Required: false},
 		"server_image_name":                     &hcldec.AttrSpec{Name: "server_image_name", Type: cty.String, Required: false},
 		"server_image_description":              &hcldec.AttrSpec{Name: "server_image_description", Type: cty.String, Required: false},
+		"block_storage_size":                    &hcldec.AttrSpec{Name: "block_storage_size", Type: cty.Number, Required: false},
+		"access_control_group_no":               &hcldec.AttrSpec{Name: "access_control_group_no", Type: cty.String, Required: false},
 		"user_data":                             &hcldec.AttrSpec{Name: "user_data", Type: cty.String, Required: false},
 		"user_data_file":                        &hcldec.AttrSpec{Name: "user_data_file", Type: cty.String, Required: false},
-		"block_storage_size":                    &hcldec.AttrSpec{Name: "block_storage_size", Type: cty.Number, Required: false},
 		"region":                                &hcldec.AttrSpec{Name: "region", Type: cty.String, Required: false},
 		"region_code":                           &hcldec.AttrSpec{Name: "region_code", Type: cty.String, Required: false},
-		"access_control_group_configuration_no": &hcldec.AttrSpec{Name: "access_control_group_configuration_no", Type: cty.String, Required: false},
-		"access_control_group_no":               &hcldec.AttrSpec{Name: "access_control_group_no", Type: cty.String, Required: false},
-		"support_vpc":                           &hcldec.AttrSpec{Name: "support_vpc", Type: cty.Bool, Required: false},
-		"subnet_no":                             &hcldec.AttrSpec{Name: "subnet_no", Type: cty.String, Required: false},
-		"vpc_no":                                &hcldec.AttrSpec{Name: "vpc_no", Type: cty.String, Required: false},
 		"site":                                  &hcldec.AttrSpec{Name: "site", Type: cty.String, Required: false},
+		"access_control_group_configuration_no": &hcldec.AttrSpec{Name: "access_control_group_configuration_no", Type: cty.String, Required: false},
 		"communicator":                          &hcldec.AttrSpec{Name: "communicator", Type: cty.String, Required: false},
 		"pause_before_connecting":               &hcldec.AttrSpec{Name: "pause_before_connecting", Type: cty.String, Required: false},
 		"ssh_host":                              &hcldec.AttrSpec{Name: "ssh_host", Type: cty.String, Required: false},

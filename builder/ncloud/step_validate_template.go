@@ -60,9 +60,9 @@ func NewStepValidateTemplate(conn *NcloudAPIClient, ui packersdk.Ui, config *Con
 	return step
 }
 
-// getZoneNo : get zoneNo
+// getZoneNo : get zoneNo(for Classic)
 func (s *StepValidateTemplate) getZoneNo() error {
-	if s.Config.Region == "" {
+	if s.Config.Region == "" && s.Config.RegionCode == "" {
 		return nil
 	}
 
@@ -72,14 +72,20 @@ func (s *StepValidateTemplate) getZoneNo() error {
 	}
 
 	for _, region := range regionList.RegionList {
+		if strings.EqualFold(*region.RegionCode, s.Config.RegionCode) {
+			s.regionNo = *region.RegionNo
+			s.regionCode = *region.RegionCode
+			break
+		}
 		if strings.EqualFold(*region.RegionName, s.Config.Region) {
 			s.regionNo = *region.RegionNo
 			s.regionCode = *region.RegionCode
+			break
 		}
 	}
 
 	if s.regionNo == "" {
-		return fmt.Errorf("region %s is invalid", s.Config.Region)
+		return fmt.Errorf("region_code:%s or region:%s is invalid", s.Config.RegionCode, s.Config.Region)
 	}
 
 	// Get ZoneNo
@@ -95,7 +101,7 @@ func (s *StepValidateTemplate) getZoneNo() error {
 	return nil
 }
 
-// getZoneCode : get zoneCode
+// getZoneCode : get zoneCode(for VPC)
 func (s *StepValidateTemplate) getZoneCode() error {
 	if s.Config.Region == "" && s.Config.RegionCode == "" {
 		return nil
@@ -107,12 +113,12 @@ func (s *StepValidateTemplate) getZoneCode() error {
 	}
 
 	for _, region := range regionList.RegionList {
-		if strings.EqualFold(*region.RegionName, s.Config.Region) {
+		if strings.EqualFold(*region.RegionCode, s.Config.RegionCode) {
 			s.regionCode = *region.RegionCode
 			s.Config.RegionCode = *region.RegionCode
 			break
 		}
-		if strings.EqualFold(*region.RegionCode, s.Config.RegionCode) {
+		if strings.EqualFold(*region.RegionName, s.Config.Region) {
 			s.regionCode = *region.RegionCode
 			s.Config.RegionCode = *region.RegionCode
 			break
@@ -120,7 +126,7 @@ func (s *StepValidateTemplate) getZoneCode() error {
 	}
 
 	if s.regionCode == "" {
-		return fmt.Errorf("region %s is invalid", s.Config.Region)
+		return fmt.Errorf("region_code:%s or region:%s is invalid", s.Config.RegionCode, s.Config.Region)
 	}
 
 	// Get ZoneNo
