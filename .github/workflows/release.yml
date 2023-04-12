@@ -10,16 +10,13 @@
 # in `goreleaser` to indicate this is being used in a non-interactive mode.
 #
 name: release
-
 on:
   push:
     tags:
       - 'v*'
-      
 permissions:
   contents: write
   packages: read
-  
 jobs:
   get-go-version:
     runs-on: ubuntu-latest
