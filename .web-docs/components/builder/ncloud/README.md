@@ -1,13 +1,3 @@
----
-description: |
-  The ncloud builder allows you to create server images using the NAVER Cloud
-  Platform.
-page_title: Naver Cloud Platform - Builders
-sidebar_title: Naver Cloud
----
-
-# NAVER CLOUD PLATFORM Builder
-
 Type: `ncloud`
 Artifact BuilderId: `ncloud.server.image`
 
@@ -18,11 +8,68 @@ Platform](https://www.ncloud.com/).
 
 ### Required:
 
-@include 'builder/ncloud/Config-required.mdx'
+<!-- Code generated from the comments of the Config struct in builder/ncloud/config.go; DO NOT EDIT MANUALLY -->
+
+- `access_key` (string) - User's access key. Go to [\[Account Management &gt; Authentication Key\]](https://www.ncloud.com/mypage/manage/authkey) to create and view your authentication key.
+
+- `secret_key` (string) - User's secret key paired with the access key. Go to [\[Account Management &gt; Authentication Key\]](https://www.ncloud.com/mypage/manage/authkey) to create and view your authentication key.
+
+- `server_image_product_code` (string) - Product code of an image to create.
+  (member_server_image_no is required if not specified)
+
+<!-- End of code generated from the comments of the Config struct in builder/ncloud/config.go; -->
+
 
 ### Optional:
 
-@include 'builder/ncloud/Config-not-required.mdx'
+<!-- Code generated from the comments of the Config struct in builder/ncloud/config.go; DO NOT EDIT MANUALLY -->
+
+- `server_product_code` (string) - Product (spec) code to create.
+
+- `support_vpc` (bool) - Whether to use VPC without specific vpc or subnet. Packer will try find public subnet in entire vpc if you set this value `true`.
+  (You are required to least one three parameters if u want using VPC environment: `support_vpc` or `vpc_no` or `subnet_no`)
+
+- `vpc_no` (string) - The ID of the VPC where you want to place the Server Instance. If this field is left blank, Packer will try to get the VPC ID from the `subnet_no` or exists public subnet.
+  (You are required to least one three parameters if u want using VPC environment: `support_vpc` or `vpc_no` or `subnet_no`)
+
+- `subnet_no` (string) - The ID of the Subnet where you want to place the Server Instance. This field is required if you are using an specific subnets.
+  (You are required to least one three parameters if u want using VPC environment: `support_vpc` or `vpc_no` or `subnet_no`)
+
+- `member_server_image_no` (string) - Previous image code. If there is an
+  image previously created, it can be used to create a new image.
+  (server_image_product_code is required if not specified)
+
+- `server_image_name` (string) - Name of an image to create.
+
+- `server_image_description` (string) - Description of an image to create.
+
+- `block_storage_size` (int) - You can add block storage ranging from 10GB to 2000 GB, in increments of 10 GB.
+
+- `access_control_group_no` (string) - This is used to allow
+  winrm access when you create a Windows server. An ACG that specifies an
+  access source (0.0.0.0/0) and allowed port (5985) must be created in
+  advance if you use CLASSIC env. If this field is left blank,
+  Packer will create temporary ACG for automatically in VPC environment.
+
+- `user_data` (string) - User data to apply when launching the instance. Note
+  that you need to be careful about escaping characters due to the templates
+  being JSON. It is often more convenient to use user_data_file, instead.
+  Packer will not automatically wait for a user script to finish before
+  shutting down the instance this must be handled in a provisioner.
+
+- `user_data_file` (string) - Path to a file that will be used for the user
+  data when launching the instance.
+
+- `region` (string) - The name of the region where you want to create an image. Such as `Korea`. To be deprecated
+
+- `region_code` (string) - The code of the region where you want to create an image. Such as KR.
+  (pub or gov default: KR) (fin default: FKR)
+
+- `site` (string) - The ncloud site. Available sites are public(`www.ncloud.com`), gov(`www.gov-ncloud.com`) and fin(`www.fin-ncloud.com`) (default: public)
+  - values: public / gov / fin
+
+<!-- End of code generated from the comments of the Config struct in builder/ncloud/config.go; -->
+
 
 ## Basic Example
 
