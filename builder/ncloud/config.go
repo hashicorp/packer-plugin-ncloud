@@ -80,9 +80,6 @@ type Config struct {
 	// - values: public / gov / fin
 	Site string `mapstructure:"site" required:"false"`
 
-	// Deprecated
-	AccessControlGroupConfigurationNo string `mapstructure:",skip"`
-
 	Comm communicator.Config `mapstructure:",squash"`
 	ctx  *interpolate.Context
 }
@@ -156,10 +153,6 @@ func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 
 	if c.UserData != "" && len(c.UserData) > 21847 {
 		errs = packersdk.MultiErrorAppend(errs, errors.New("if `user_data` field is set, length of UserData should be max 21847"))
-	}
-
-	if c.AccessControlGroupConfigurationNo != "" {
-		errs = packersdk.MultiErrorAppend(errs, errors.New("`access_control_group_configuration_no` is deprecated, please use `access_control_group_no` instead"))
 	}
 
 	if c.VpcNo != "" || c.SubnetNo != "" {
