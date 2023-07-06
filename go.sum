@@ -22,8 +22,8 @@ github.com/ChrisTrenkamp/goxpath v0.0.0-20210404020558-97928f7e12b6/go.mod h1:nu
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
 github.com/Microsoft/go-winio v0.4.15-0.20190919025122-fc70bd9a86b5/go.mod h1:tTuCMEN+UleMWgg9dVx4Hu52b1bJo+59jBh3ajtinzw=
 github.com/Microsoft/hcsshim v0.8.9/go.mod h1:5692vkUqntj1idxauYlpoINNKeqCiG6Sg38RRsjT5y8=
-github.com/NaverCloudPlatform/ncloud-sdk-go-v2 v1.1.7 h1:Kpnbe19WkzVPpLLdAus4LkpNJ+pzLpfAViOUuvPcCqA=
-github.com/NaverCloudPlatform/ncloud-sdk-go-v2 v1.1.7/go.mod h1:P+3VS0ETiQPyWOx3vB/oeC8J3qd7jnVZLYAFwWgGRt8=
+github.com/NaverCloudPlatform/ncloud-sdk-go-v2 v1.6.5 h1:d2KDgwBfNSlGRTpcSn5Tzw7yY56m0bPCwaesYaN3QL0=
+github.com/NaverCloudPlatform/ncloud-sdk-go-v2 v1.6.5/go.mod h1:sDa6EITv6z/l6+d4VJk4OiRZnXuO0uG2Cm30qtqF4TU=
 github.com/agext/levenshtein v1.2.3 h1:YB2fHEn0UJagG8T1rrWknE3ZQzWM06O8AMAatNn7lmo=
 github.com/agext/levenshtein v1.2.3/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki2W0IB5558=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
