@@ -162,11 +162,14 @@ func (s *StepValidateTemplate) validateMemberServerImage(fnGetServerImageList fu
 
 		if *image.MemberServerImageNo == s.Config.MemberServerImageNo {
 			isExistMemberServerImageNo = true
-			if s.Config.ServerProductCode == "" && !s.Config.SupportVPC {
+			// OriginalServerProductCode value : Classic exist. VPC not exist.
+			if s.Config.ServerProductCode == "" && image.OriginalServerProductCode != nil {
 				s.Config.ServerProductCode = *image.OriginalServerProductCode
 				s.Say("server_product_code for member server image '" + *image.OriginalServerProductCode + "' is configured automatically")
 			}
-			s.Config.ServerImageProductCode = *image.OriginalServerImageProductCode
+			if image.OriginalServerImageProductCode != nil {
+				s.Config.ServerImageProductCode = *image.OriginalServerImageProductCode
+			}
 		}
 	}
 
