@@ -162,11 +162,14 @@ func (s *StepValidateTemplate) validateMemberServerImage(fnGetServerImageList fu
 
 		if *image.MemberServerImageNo == s.Config.MemberServerImageNo {
 			isExistMemberServerImageNo = true
-			if s.Config.ServerProductCode == "" {
+			// OriginalServerProductCode value : Classic exist. VPC not exist.
+			if s.Config.ServerProductCode == "" && image.OriginalServerProductCode != nil {
 				s.Config.ServerProductCode = *image.OriginalServerProductCode
 				s.Say("server_product_code for member server image '" + *image.OriginalServerProductCode + "' is configured automatically")
 			}
-			s.Config.ServerImageProductCode = *image.OriginalServerImageProductCode
+			if image.OriginalServerImageProductCode != nil {
+				s.Config.ServerImageProductCode = *image.OriginalServerImageProductCode
+			}
 		}
 	}
 
@@ -203,11 +206,11 @@ func (s *StepValidateTemplate) getVpcMemberServerImageList() ([]*server.MemberSe
 	var results []*server.MemberServerImage
 	for _, r := range memberServerImageList.MemberServerImageInstanceList {
 		results = append(results, &server.MemberServerImage{
-			MemberServerImageNo:          r.MemberServerImageInstanceNo,
-			MemberServerImageName:        r.MemberServerImageName,
-			MemberServerImageDescription: r.MemberServerImageDescription,
-			OriginalServerInstanceNo:     r.OriginalServerInstanceNo,
-			OriginalServerProductCode:    r.OriginalServerImageProductCode,
+			MemberServerImageNo:            r.MemberServerImageInstanceNo,
+			MemberServerImageName:          r.MemberServerImageName,
+			MemberServerImageDescription:   r.MemberServerImageDescription,
+			OriginalServerInstanceNo:       r.OriginalServerInstanceNo,
+			OriginalServerImageProductCode: r.OriginalServerImageProductCode,
 		})
 	}
 
@@ -469,7 +472,11 @@ func (s *StepValidateTemplate) getFirstPublicSubnet() (*vpc.Subnet, error) {
 	}
 
 	if resp != nil && *resp.TotalRows > 0 {
-		return resp.SubnetList[0], nil
+		for _, subnet := range resp.SubnetList {
+			if *subnet.UsageType.Code == "GEN" {
+				return subnet, nil
+			}
+		}
 	}
 
 	return nil, fmt.Errorf("could not found public subnet in `vpc_no` [%s]", s.Config.VpcNo)
@@ -482,7 +489,7 @@ func (s *StepValidateTemplate) validateTemplate() error {
 		return err
 	}
 
-	// Validate member_server_image_no and member_server_image_no
+	// Validate member_server_image_no and Get ServerProductCode or ServerImageProductCode
 	if err := s.validateMemberServerImage(s.getMemberServerImageList); err != nil {
 		return err
 	}
