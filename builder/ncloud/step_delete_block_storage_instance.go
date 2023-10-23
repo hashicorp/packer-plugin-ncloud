@@ -138,10 +138,6 @@ func (s *StepDeleteBlockStorage) deleteVpcBlockStorage(serverInstanceNo string) 
 }
 
 func (s *StepDeleteBlockStorage) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
-	if s.Config.BlockStorageSize == 0 {
-		return processStepResult(nil, s.Error, state)
-	}
-
 	s.Say("Delete Block Storage Instance")
 
 	var serverInstanceNo = state.Get("instance_no").(string)
