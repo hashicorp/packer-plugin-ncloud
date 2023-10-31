@@ -99,7 +99,7 @@ func (s *StepCreateLoginKey) Run(ctx context.Context, state multistep.StateBag) 
 	loginKey, err := s.CreateLoginKey()
 	if err == nil {
 		state.Put("login_key", loginKey)
-		s.Say(fmt.Sprintf("Login Key[%s] is created", loginKey.KeyName))
+		s.Say("Login Key[" + loginKey.KeyName + "] is created")
 	}
 
 	return processStepResult(err, s.Error, state)

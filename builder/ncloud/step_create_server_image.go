@@ -6,7 +6,6 @@ package ncloud
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/NaverCloudPlatform/ncloud-sdk-go-v2/services/server"
@@ -63,13 +62,13 @@ func (s *StepCreateServerImage) createClassicServerImage(serverInstanceNo string
 
 	serverImage := memberServerImageList.MemberServerImageList[0]
 
-	s.Say(fmt.Sprintf("Server Image[%s:%s] is creating...", *serverImage.MemberServerImageName, *serverImage.MemberServerImageNo))
+	s.Say("Server Image[" + *serverImage.MemberServerImageName + ":" + *serverImage.MemberServerImageNo + "] is creating...")
 
 	if err := waiterClassicMemberServerImageStatus(s.Conn, *serverImage.MemberServerImageNo, ServerImageStatusCreated, 6*time.Hour); err != nil {
 		return nil, errors.New("TIMEOUT : Server Image is not created")
 	}
 
-	s.Say(fmt.Sprintf("Server Image[%s:%s] is created", *serverImage.MemberServerImageName, *serverImage.MemberServerImageNo))
+	s.Say("Server Image[" + *serverImage.MemberServerImageName + ":" + *serverImage.MemberServerImageNo + "] is created")
 
 	return serverImage, nil
 }
@@ -93,13 +92,13 @@ func (s *StepCreateServerImage) createVpcServerImage(serverInstanceNo string) (*
 
 	serverImage := memberServerImageList.MemberServerImageInstanceList[0]
 
-	s.Say(fmt.Sprintf("Server Image[%s:%s] is creating...", *serverImage.MemberServerImageName, *serverImage.MemberServerImageInstanceNo))
+	s.Say("Server Image[" + *serverImage.MemberServerImageName + ":" + *serverImage.MemberServerImageInstanceNo + "] is creating...")
 
 	if err := waiterVpcMemberServerImageStatus(s.Conn, *serverImage.MemberServerImageInstanceNo, ServerImageStatusCreated, 6*time.Hour); err != nil {
 		return nil, errors.New("TIMEOUT : Server Image is not created")
 	}
 
-	s.Say(fmt.Sprintf("Server Image[%s:%s] is created", *serverImage.MemberServerImageName, *serverImage.MemberServerImageInstanceNo))
+	s.Say("Server Image[" + *serverImage.MemberServerImageName + ":" + *serverImage.MemberServerImageInstanceNo + "] is created")
 
 	result := &server.MemberServerImage{
 		MemberServerImageNo:   serverImage.MemberServerImageInstanceNo,

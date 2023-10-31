@@ -5,7 +5,6 @@ package ncloud
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/NaverCloudPlatform/ncloud-sdk-go-v2/services/server"
@@ -52,13 +51,13 @@ func (s *StepStopServerInstance) stopClassicServerInstance(serverInstanceNo stri
 		return err
 	}
 
-	s.Say(fmt.Sprintf("Server Instance is stopping. Server InstanceNo is %s", *serverInstanceList.ServerInstanceList[0].ServerInstanceNo))
+	s.Say("Server Instance is stopping. Server InstanceNo is " + *serverInstanceList.ServerInstanceList[0].ServerInstanceNo)
 
 	if err := s.WaiterServerInstanceStatus(s.Conn, serverInstanceNo, ServerInstanceStatusStopped, 5*time.Minute); err != nil {
 		return err
 	}
 
-	s.Say(fmt.Sprintf("Server Instance stopped. Server InstanceNo is %s", *serverInstanceList.ServerInstanceList[0].ServerInstanceNo))
+	s.Say("Server Instance stopped. Server InstanceNo is " + *serverInstanceList.ServerInstanceList[0].ServerInstanceNo)
 
 	return nil
 }
@@ -74,13 +73,13 @@ func (s *StepStopServerInstance) stopVpcServerInstance(serverInstanceNo string) 
 		return err
 	}
 
-	s.Say(fmt.Sprintf("Server Instance is stopping. Server InstanceNo is %s", *serverInstanceList.ServerInstanceList[0].ServerInstanceNo))
+	s.Say("Server Instance is stopping. Server InstanceNo is " + *serverInstanceList.ServerInstanceList[0].ServerInstanceNo)
 
 	if err := s.WaiterServerInstanceStatus(s.Conn, serverInstanceNo, ServerInstanceStatusStopped, 5*time.Minute); err != nil {
 		return err
 	}
 
-	s.Say(fmt.Sprintf("Server Instance stopped. Server InstanceNo is %s", *serverInstanceList.ServerInstanceList[0].ServerInstanceNo))
+	s.Say("Server Instance stopped. Server InstanceNo is " + *serverInstanceList.ServerInstanceList[0].ServerInstanceNo)
 
 	return nil
 }

@@ -5,7 +5,6 @@ package ncloud
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/NaverCloudPlatform/ncloud-sdk-go-v2/services/server"
 	"github.com/NaverCloudPlatform/ncloud-sdk-go-v2/services/vserver"
@@ -49,7 +48,7 @@ func (s *StepGetRootPassword) getClassicRootPassword(serverInstanceNo string, pr
 		return "", err
 	}
 
-	s.Say(fmt.Sprintf("Root password is %s", *rootPassword.RootPassword))
+	s.Say("Root password is " + *rootPassword.RootPassword)
 
 	return *rootPassword.RootPassword, nil
 }
@@ -66,7 +65,7 @@ func (s *StepGetRootPassword) getVpcRootPassword(serverInstanceNo string, privat
 		return "", err
 	}
 
-	s.Say(fmt.Sprintf("Root password is %s", *rootPassword.RootPassword))
+	s.Say("Root password is " + *rootPassword.RootPassword)
 
 	return *rootPassword.RootPassword, nil
 }

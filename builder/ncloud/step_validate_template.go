@@ -504,7 +504,7 @@ func (s *StepValidateTemplate) validateTemplate() error {
 		return err
 	}
 
-	s.Say(fmt.Sprintf("vpc: %s, subnet: %s", s.Config.VpcNo, s.Config.SubnetNo))
+	s.Say("vpc: " + s.Config.VpcNo + ", subnet: " + s.Config.SubnetNo)
 	// Validate server_product_code
 	return s.validateServerProductCode()
 }

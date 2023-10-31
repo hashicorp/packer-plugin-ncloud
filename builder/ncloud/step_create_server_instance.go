@@ -94,7 +94,7 @@ func (s *StepCreateServerInstance) createClassicServerInstance(loginKeyName stri
 	}
 
 	s.serverInstanceNo = *serverInstanceList.ServerInstanceList[0].ServerInstanceNo
-	s.Say(fmt.Sprintf("Server Instance is creating. Server InstanceNo is %s", s.serverInstanceNo))
+	s.Say("Server Instance is creating. Server InstanceNo is " + s.serverInstanceNo)
 
 	resp, _ := json.Marshal(serverInstanceList)
 	log.Printf("createClassicServerInstance response=%s", resp)
@@ -103,7 +103,7 @@ func (s *StepCreateServerInstance) createClassicServerInstance(loginKeyName stri
 		return "", errors.New("TIMEOUT : server instance status is not running")
 	}
 
-	s.Say(fmt.Sprintf("Server Instance is created. Server InstanceNo is %s", s.serverInstanceNo))
+	s.Say("Server Instance is created. Server InstanceNo is " + s.serverInstanceNo)
 
 	return s.serverInstanceNo, nil
 }
@@ -148,7 +148,7 @@ func (s *StepCreateServerInstance) createVpcServerInstance(loginKeyName string, 
 	}
 
 	s.serverInstanceNo = *serverInstanceList.ServerInstanceList[0].ServerInstanceNo
-	s.Say(fmt.Sprintf("Server Instance is creating. Server InstanceNo is %s", s.serverInstanceNo))
+	s.Say("Server Instance is creating. Server InstanceNo is " + s.serverInstanceNo)
 
 	resp, _ := json.Marshal(serverInstanceList)
 	log.Printf("createVpcServerInstance response=%s", resp)
@@ -157,7 +157,7 @@ func (s *StepCreateServerInstance) createVpcServerInstance(loginKeyName string, 
 		return "", errors.New("TIMEOUT : server instance status is not running")
 	}
 
-	s.Say(fmt.Sprintf("Server Instance is created. Server InstanceNo is %s", s.serverInstanceNo))
+	s.Say("Server Instance is created. Server InstanceNo is " + s.serverInstanceNo)
 
 	return s.serverInstanceNo, nil
 }

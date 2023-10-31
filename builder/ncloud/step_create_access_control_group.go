@@ -165,7 +165,7 @@ func (s *StepCreateAccessControlGroup) Run(ctx context.Context, state multistep.
 	}
 
 	acgNo, err := s.CreateAccessControlGroup()
-	s.Say(fmt.Sprintf("Creating temporary ACG [%s]", acgNo))
+	s.Say("Creating temporary ACG " + acgNo)
 	if err != nil || len(acgNo) == 0 {
 		err := fmt.Errorf("couldn't create ACG for VPC: %s", err)
 		state.Put("error", err)
@@ -174,7 +174,7 @@ func (s *StepCreateAccessControlGroup) Run(ctx context.Context, state multistep.
 
 	s.createdAcgNo = acgNo
 
-	s.Say(fmt.Sprintf("Creating temporary rules ACG [%s]", acgNo))
+	s.Say("Creating temporary rules ACG " + acgNo)
 	err = s.AddAccessControlGroupRule(acgNo)
 	if err != nil {
 		err := fmt.Errorf("couldn't create ACG rules for SSH or winrm: %s", err)
