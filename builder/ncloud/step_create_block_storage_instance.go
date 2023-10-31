@@ -5,6 +5,7 @@ package ncloud
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -67,11 +68,16 @@ func (s *StepCreateBlockStorage) createClassicBlockStorage(serverInstanceNo stri
 	}
 
 	blockStorageInstance := resp.BlockStorageInstanceList[0]
-	log.Println("Block Storage Instance information : ", blockStorageInstance.BlockStorageInstanceNo)
+	s.Say(fmt.Sprintf("Block Storage Instance is creating. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
+
+	respInfo, _ := json.Marshal(resp)
+	log.Printf("createClassicBlockStorage response=%s", respInfo)
 
 	if err := waiterClassicBlockStorageStatus(s.Conn, blockStorageInstance.BlockStorageInstanceNo, BlockStorageStatusAttached, 10*time.Minute); err != nil {
 		return nil, errors.New("TIMEOUT : Block Storage instance status is not attached")
 	}
+
+	s.Say(fmt.Sprintf("Block Storage Instance is created. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
 
 	return blockStorageInstance.BlockStorageInstanceNo, nil
 }
@@ -92,11 +98,16 @@ func (s *StepCreateBlockStorage) createVpcBlockStorage(serverInstanceNo string) 
 	}
 
 	blockStorageInstance := resp.BlockStorageInstanceList[0]
-	log.Println("Block Storage Instance information : ", blockStorageInstance.BlockStorageInstanceNo)
+	s.Say(fmt.Sprintf("Block Storage Instance is creating. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
+
+	respInfo, _ := json.Marshal(resp)
+	log.Printf("createVpcBlockStorage response=%s", respInfo)
 
 	if err := s.WaiterBlockStorageStatus(s.Conn, blockStorageInstance.BlockStorageInstanceNo, BlockStorageStatusAttached, 10*time.Minute); err != nil {
 		return nil, errors.New("TIMEOUT : Block Storage instance status is not attached")
 	}
+
+	s.Say(fmt.Sprintf("Block Storage Instance is created. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
 
 	return blockStorageInstance.BlockStorageInstanceNo, nil
 }

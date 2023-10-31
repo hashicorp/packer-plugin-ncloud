@@ -5,6 +5,7 @@ package ncloud
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -58,9 +59,9 @@ func (s *StepDeleteBlockStorage) getClassicBlockList(serverInstanceNo string) []
 	var instanceList []*string
 
 	for _, blockStorageInstance := range blockStorageInstanceList.BlockStorageInstanceList {
-		log.Println(blockStorageInstance)
 		if *blockStorageInstance.BlockStorageType.Code != "BASIC" {
 			instanceList = append(instanceList, blockStorageInstance.BlockStorageInstanceNo)
+			s.Say(fmt.Sprintf("Block Storage Instance is deleting. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
 		}
 	}
 
@@ -84,9 +85,9 @@ func (s *StepDeleteBlockStorage) getVpcBlockList(serverInstanceNo string) []*str
 	var instanceList []*string
 
 	for _, blockStorageInstance := range blockStorageInstanceList.BlockStorageInstanceList {
-		log.Println(blockStorageInstance)
 		if *blockStorageInstance.BlockStorageType.Code != "BASIC" {
 			instanceList = append(instanceList, blockStorageInstance.BlockStorageInstanceNo)
+			s.Say(fmt.Sprintf("Block Storage Instance is deleting. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
 		}
 	}
 
@@ -101,16 +102,20 @@ func (s *StepDeleteBlockStorage) deleteClassicBlockStorage(serverInstanceNo stri
 	reqParams := server.DeleteBlockStorageInstancesRequest{
 		BlockStorageInstanceNoList: blockStorageInstanceList,
 	}
-	_, err := s.Conn.server.V2Api.DeleteBlockStorageInstances(&reqParams)
+
+	resp, err := s.Conn.server.V2Api.DeleteBlockStorageInstances(&reqParams)
 	if err != nil {
 		return err
 	}
 
-	s.Say(fmt.Sprintf("Block Storage Instance is deleted. Block Storage Instance List is %v", blockStorageInstanceList))
+	respInfo, _ := json.Marshal(resp)
+	log.Printf("deleteClassicBlockStorage response=%s", respInfo)
 
 	if err := waiterClassicDetachedBlockStorage(s.Conn, serverInstanceNo, time.Minute); err != nil {
 		return errors.New("TIMEOUT : Block Storage instance status is not deattached")
 	}
+
+	s.Say(fmt.Sprintf("Block Storage Instance is deleted"))
 
 	return nil
 }
@@ -123,16 +128,20 @@ func (s *StepDeleteBlockStorage) deleteVpcBlockStorage(serverInstanceNo string) 
 	reqParams := vserver.DeleteBlockStorageInstancesRequest{
 		BlockStorageInstanceNoList: blockStorageInstanceList,
 	}
-	_, err := s.Conn.vserver.V2Api.DeleteBlockStorageInstances(&reqParams)
+
+	resp, err := s.Conn.vserver.V2Api.DeleteBlockStorageInstances(&reqParams)
 	if err != nil {
 		return err
 	}
 
-	s.Say(fmt.Sprintf("Block Storage Instance is deleted. Block Storage Instance List is %v", blockStorageInstanceList))
+	respInfo, _ := json.Marshal(resp)
+	log.Printf("deleteVpcBlockStorage response=%s", respInfo)
 
 	if err := waiterVpcDetachedBlockStorage(s.Conn, serverInstanceNo, time.Minute); err != nil {
 		return errors.New("TIMEOUT : Block Storage instance status is not deattached")
 	}
+
+	s.Say(fmt.Sprintf("Block Storage Instance is deleted"))
 
 	return nil
 }
