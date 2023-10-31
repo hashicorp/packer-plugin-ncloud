@@ -7,7 +7,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -61,7 +60,7 @@ func (s *StepDeleteBlockStorage) getClassicBlockList(serverInstanceNo string) []
 	for _, blockStorageInstance := range blockStorageInstanceList.BlockStorageInstanceList {
 		if *blockStorageInstance.BlockStorageType.Code != "BASIC" {
 			instanceList = append(instanceList, blockStorageInstance.BlockStorageInstanceNo)
-			s.Say(fmt.Sprintf("Block Storage Instance is deleting. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
+			s.Say("Block Storage Instance is deleting. InstanceNo is " + *blockStorageInstance.BlockStorageInstanceNo)
 		}
 	}
 
@@ -87,7 +86,7 @@ func (s *StepDeleteBlockStorage) getVpcBlockList(serverInstanceNo string) []*str
 	for _, blockStorageInstance := range blockStorageInstanceList.BlockStorageInstanceList {
 		if *blockStorageInstance.BlockStorageType.Code != "BASIC" {
 			instanceList = append(instanceList, blockStorageInstance.BlockStorageInstanceNo)
-			s.Say(fmt.Sprintf("Block Storage Instance is deleting. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
+			s.Say("Block Storage Instance is deleting. InstanceNo is " + *blockStorageInstance.BlockStorageInstanceNo)
 		}
 	}
 
@@ -115,7 +114,7 @@ func (s *StepDeleteBlockStorage) deleteClassicBlockStorage(serverInstanceNo stri
 		return errors.New("TIMEOUT : Block Storage instance status is not deattached")
 	}
 
-	s.Say(fmt.Sprintf("Block Storage Instance is deleted"))
+	s.Say("Block Storage Instance is deleted")
 
 	return nil
 }
@@ -141,7 +140,7 @@ func (s *StepDeleteBlockStorage) deleteVpcBlockStorage(serverInstanceNo string) 
 		return errors.New("TIMEOUT : Block Storage instance status is not deattached")
 	}
 
-	s.Say(fmt.Sprintf("Block Storage Instance is deleted"))
+	s.Say("Block Storage Instance is deleted")
 
 	return nil
 }

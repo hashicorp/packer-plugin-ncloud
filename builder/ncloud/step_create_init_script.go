@@ -102,7 +102,7 @@ func (s *StepCreateInitScript) Run(ctx context.Context, state multistep.StateBag
 	initScriptNo, err := s.CreateInitScript()
 	if err == nil && initScriptNo != "" {
 		state.Put("init_script_no", initScriptNo)
-		s.Say(fmt.Sprintf("Init script[%s] is created", initScriptNo))
+		s.Say("Init script[" + initScriptNo + "] is created")
 	}
 
 	return processStepResult(err, s.Error, state)

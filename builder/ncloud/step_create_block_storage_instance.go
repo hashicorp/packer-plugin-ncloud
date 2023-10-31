@@ -7,7 +7,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -68,7 +67,7 @@ func (s *StepCreateBlockStorage) createClassicBlockStorage(serverInstanceNo stri
 	}
 
 	blockStorageInstance := resp.BlockStorageInstanceList[0]
-	s.Say(fmt.Sprintf("Block Storage Instance is creating. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
+	s.Say("Block Storage Instance is creating. InstanceNo is " + *blockStorageInstance.BlockStorageInstanceNo)
 
 	respInfo, _ := json.Marshal(resp)
 	log.Printf("createClassicBlockStorage response=%s", respInfo)
@@ -77,7 +76,7 @@ func (s *StepCreateBlockStorage) createClassicBlockStorage(serverInstanceNo stri
 		return nil, errors.New("TIMEOUT : Block Storage instance status is not attached")
 	}
 
-	s.Say(fmt.Sprintf("Block Storage Instance is created. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
+	s.Say("Block Storage Instance is created. InstanceNo is " + *blockStorageInstance.BlockStorageInstanceNo)
 
 	return blockStorageInstance.BlockStorageInstanceNo, nil
 }
@@ -98,7 +97,7 @@ func (s *StepCreateBlockStorage) createVpcBlockStorage(serverInstanceNo string) 
 	}
 
 	blockStorageInstance := resp.BlockStorageInstanceList[0]
-	s.Say(fmt.Sprintf("Block Storage Instance is creating. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
+	s.Say("Block Storage Instance is creating. InstanceNo is " + *blockStorageInstance.BlockStorageInstanceNo)
 
 	respInfo, _ := json.Marshal(resp)
 	log.Printf("createVpcBlockStorage response=%s", respInfo)
@@ -107,7 +106,7 @@ func (s *StepCreateBlockStorage) createVpcBlockStorage(serverInstanceNo string) 
 		return nil, errors.New("TIMEOUT : Block Storage instance status is not attached")
 	}
 
-	s.Say(fmt.Sprintf("Block Storage Instance is created. InstanceNo is %s", *blockStorageInstance.BlockStorageInstanceNo))
+	s.Say("Block Storage Instance is created. InstanceNo is " + *blockStorageInstance.BlockStorageInstanceNo)
 
 	return blockStorageInstance.BlockStorageInstanceNo, nil
 }
@@ -175,7 +174,7 @@ func (s *StepCreateBlockStorage) Cleanup(state multistep.StateBag) {
 			return
 		}
 
-		s.Say(fmt.Sprintf("Block Storage Instance is deleted. Block Storage InstanceNo is %s", blockStorageInstanceNo.(string)))
+		s.Say("Block Storage Instance is deleted. Block Storage InstanceNo is " + blockStorageInstanceNo.(string))
 
 		if err := s.WaiterBlockStorageStatus(s.Conn, blockStorageInstanceNo.(*string), BlockStorageStatusDetached, time.Minute); err != nil {
 			s.Say("TIMEOUT : Block Storage instance status is not deattached")

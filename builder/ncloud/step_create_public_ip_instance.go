@@ -190,7 +190,7 @@ func (s *StepCreatePublicIP) createClassicPublicIP(serverInstanceNo string) (*se
 
 	publicIPInstance := publicIPInstanceList.PublicIpInstanceList[0]
 	publicIP := publicIPInstance.PublicIp
-	s.Say(fmt.Sprintf("Public IP Instance [%s:%s] is created", *publicIPInstance.PublicIpInstanceNo, *publicIP))
+	s.Say("Public IP Instance [" + *publicIPInstance.PublicIpInstanceNo + ":" + *publicIP + "] is created")
 
 	err = s.WaiterAssociatePublicIPToServerInstance(serverInstanceNo, *publicIP)
 	if err != nil {
@@ -213,7 +213,7 @@ func (s *StepCreatePublicIP) createVpcPublicIP(serverInstanceNo string) (*server
 
 	publicIPInstance := publicIPInstanceList.PublicIpInstanceList[0]
 	publicIP := publicIPInstance.PublicIp
-	s.Say(fmt.Sprintf("Public IP Instance [%s:%s] is created", *publicIPInstance.PublicIpInstanceNo, *publicIP))
+	s.Say("Public IP Instance [" + *publicIPInstance.PublicIpInstanceNo + ":" + *publicIP + "] is created")
 
 	err = s.WaiterAssociatePublicIPToServerInstance(serverInstanceNo, *publicIP)
 	if err != nil {

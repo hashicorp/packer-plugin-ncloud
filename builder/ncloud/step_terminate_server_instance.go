@@ -6,7 +6,6 @@ package ncloud
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -50,7 +49,7 @@ func (s *StepTerminateServerInstance) terminateClassicServerInstance(serverInsta
 	if err != nil {
 		return err
 	}
-	s.Say(fmt.Sprintf("Server Instance is terminating. Server InstanceNo is %s", serverInstanceNo))
+	s.Say("Server Instance is terminating. Server InstanceNo is " + serverInstanceNo)
 
 	c1 := make(chan error, 1)
 
@@ -76,7 +75,7 @@ func (s *StepTerminateServerInstance) terminateClassicServerInstance(serverInsta
 
 	select {
 	case res := <-c1:
-		s.Say(fmt.Sprintf("Server Instance terminated. Server InstanceNo is %s", serverInstanceNo))
+		s.Say("Server Instance terminated. Server InstanceNo is " + serverInstanceNo)
 		return res
 	case <-time.After(time.Second * 60):
 		return errors.New("TIMEOUT : Can't terminate server instance")
@@ -92,7 +91,7 @@ func (s *StepTerminateServerInstance) terminateVpcServerInstance(serverInstanceN
 	if err != nil {
 		return err
 	}
-	s.Say(fmt.Sprintf("Server Instance is terminating. Server InstanceNo is %s", serverInstanceNo))
+	s.Say("Server Instance is terminating. Server InstanceNo is " + serverInstanceNo)
 
 	c1 := make(chan error, 1)
 
@@ -119,7 +118,7 @@ func (s *StepTerminateServerInstance) terminateVpcServerInstance(serverInstanceN
 
 	select {
 	case res := <-c1:
-		s.Say(fmt.Sprintf("Server Instance terminated. Server InstanceNo is %s", serverInstanceNo))
+		s.Say("Server Instance terminated. Server InstanceNo is " + serverInstanceNo)
 		return res
 	case <-time.After(time.Second * 120):
 		return errors.New("TIMEOUT : Can't terminate server instance")
