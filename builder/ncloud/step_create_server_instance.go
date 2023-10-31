@@ -5,6 +5,7 @@ package ncloud
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -94,7 +95,9 @@ func (s *StepCreateServerInstance) createClassicServerInstance(loginKeyName stri
 
 	s.serverInstanceNo = *serverInstanceList.ServerInstanceList[0].ServerInstanceNo
 	s.Say(fmt.Sprintf("Server Instance is creating. Server InstanceNo is %s", s.serverInstanceNo))
-	log.Println("Server Instance information : ", serverInstanceList.ServerInstanceList[0])
+
+	resp, _ := json.Marshal(serverInstanceList)
+	log.Printf("createClassicServerInstance response=%s", resp)
 
 	if err := s.WaiterServerInstanceStatus(s.Conn, s.serverInstanceNo, ServerInstanceStatusRunning, 30*time.Minute); err != nil {
 		return "", errors.New("TIMEOUT : server instance status is not running")
@@ -146,7 +149,9 @@ func (s *StepCreateServerInstance) createVpcServerInstance(loginKeyName string, 
 
 	s.serverInstanceNo = *serverInstanceList.ServerInstanceList[0].ServerInstanceNo
 	s.Say(fmt.Sprintf("Server Instance is creating. Server InstanceNo is %s", s.serverInstanceNo))
-	log.Println("Server Instance information : ", serverInstanceList.ServerInstanceList[0])
+
+	resp, _ := json.Marshal(serverInstanceList)
+	log.Printf("createVpcServerInstance response=%s", resp)
 
 	if err := s.WaiterServerInstanceStatus(s.Conn, s.serverInstanceNo, ServerInstanceStatusRunning, 30*time.Minute); err != nil {
 		return "", errors.New("TIMEOUT : server instance status is not running")

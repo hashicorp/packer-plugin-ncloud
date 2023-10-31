@@ -41,7 +41,7 @@ func waiterClassicBlockStorageStatus(conn *NcloudAPIClient, blockStorageInstance
 				return
 			}
 
-			log.Println(blockStorageInstance)
+			log.Printf("Status of blockStorageInstanceNo [%s] is %s\n", *blockStorageInstanceNo, *code)
 			time.Sleep(time.Second * 5)
 		}
 	}()
@@ -83,7 +83,7 @@ func waiterVpcBlockStorageStatus(conn *NcloudAPIClient, blockStorageInstanceNo *
 				return
 			}
 
-			log.Println(blockStorageInstance)
+			log.Printf("Status of blockStorageInstanceNo [%s] is %s\n", *blockStorageInstanceNo, *code)
 			time.Sleep(time.Second * 5)
 		}
 	}()
